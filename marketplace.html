@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - ACity Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        .item-card {
+            transition: all 0.3s ease;
+        }
+        .item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        .navbar-shadow {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="navbar-shadow bg-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                    <span class="text-white font-bold">AC</span>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ACity Connect</h1>
+            </div>
+            <button class="mobile-menu-btn md:hidden" aria-label="Toggle navigation" aria-expanded="false"><i class="fas fa-bars"></i></button>
+            <div class="nav-links hidden md:flex gap-6 items-center">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="marketplace.html" class="nav-link active">Marketplace</a>
+                <a href="skills.html" class="nav-link">Skills</a>
+                <a href="profile.html" class="btn btn-primary">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="bg-gradient-to-r from-blue-50 to-purple-50 py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Marketplace</h1>
+                    <p class="text-gray-600">Discover thousands of items from verified campus members</p>
+                </div>
+                <a href="create-item.html" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-bold hover:shadow-lg transition whitespace-nowrap">
+                    <i class="fas fa-plus"></i> Post Item
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-md p-6 md:p-8">
+            <h3 class="text-lg font-bold mb-6">Search & Filter</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-gray-700 font-bold mb-2">Search Items</label>
+                    <input type="text" id="searchInput" placeholder="Textbooks, electronics..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-bold mb-2">Category</label>
+                    <select id="categoryFilter" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
+                        <option value="">All Categories</option>
+                        <option value="textbooks"><i class="fas fa-book"></i> Textbooks</option>
+                        <option value="electronics"><i class="fas fa-laptop"></i> Electronics</option>
+                        <option value="furniture"><i class="fas fa-chair"></i> Furniture</option>
+                        <option value="other"><i class="fas fa-box"></i> Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-bold mb-2">Status</label>
+                    <select id="statusFilter" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
+                        <option value="">All Status</option>
+                        <option value="available"><i class="fas fa-check-circle"></i> Available</option>
+                        <option value="swapped"><i class="fas fa-sync"></i> Swapped</option>
+                        <option value="sold"><i class="fas fa-check"></i> Sold</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="filterItems()" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Items Grid -->
+    <div class="max-w-7xl mx-auto px-4 pb-16">
+        <div id="itemsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Items will be loaded here by JavaScript -->
+            <div class="col-span-full text-center py-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                <p class="text-gray-500 mt-4">Loading items...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2024 ACity Connect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Enhanced item display with better cards
+        async function loadItems() {
+            try {
+                const response = await apiCall('/items');
+                displayItems(response);
+            } catch (error) {
+                document.getElementById('itemsContainer').innerHTML = '<div class="col-span-full text-center text-red-500">Failed to load items</div>';
+            }
+        }
+
+        function displayItems(items) {
+            const container = document.getElementById('itemsContainer');
+
+            if (items.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12">No items found</div>';
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div class="item-card bg-white rounded-2xl overflow-hidden border border-gray-200">
+                    <div class="bg-gradient-to-br from-gray-200 to-gray-300 h-48 flex items-center justify-center relative group overflow-hidden">
+                        ${item.image_url ? `<img src="${item.image_url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">` : '<div class="text-gray-400 text-4xl"><i class="fas fa-box"></i></div>'}
+                        <span class="absolute top-3 right-3 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">${item.category}</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2 text-gray-800 line-clamp-2">${item.title}</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">${item.description}</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <p class="text-2xl font-bold text-blue-600">${item.price ? '$' + parseFloat(item.price).toFixed(2) : 'Free'}</p>
+                            </div>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full ${
+                                item.status === 'available' ? 'bg-green-100 text-green-800' :
+                                item.status === 'swapped' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-gray-100 text-gray-800'
+                            }">
+                                ${item.status === 'available' ? '<i class="fas fa-check-circle"></i> Available' : item.status === 'swapped' ? '<i class="fas fa-sync"></i> Swapped' : '<i class="fas fa-check"></i> Sold'}
+                            </span>
+                        </div>
+                        <button onclick="viewItem(${item.id})" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-bold hover:shadow-lg transition">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterItems() {
+            const search = document.getElementById('searchInput').value;
+            const category = document.getElementById('categoryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            let query = '/items?';
+            if (search) query += `search=${search}&`;
+            if (category) query += `category=${category}&`;
+            if (status) query += `status=${status}&`;
+
+            apiCall(query)
+                .then(displayItems)
+                .catch(error => {
+                    document.getElementById('itemsContainer').innerHTML = '<div class="col-span-full text-center text-red-500">Failed to filter items</div>';
+                });
+        }
+
+        function viewItem(id) {
+            alert('Item ' + id + ' - Detail page coming soon!');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadItems);
+    </script>
+    <script src="js/ui.js"></script>
+</body>
+</html>

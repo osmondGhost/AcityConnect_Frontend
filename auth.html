@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login & Register - ACity Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/theme.css" />
+    <style>
+      .auth-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .form-input {
+        transition: all 0.3s ease;
+      }
+      .form-input:focus {
+        transform: translateX(2px);
+      }
+    </style>
+  </head>
+  <body class="auth-gradient min-h-screen flex items-center justify-center p-4">
+    <!-- Background blur effect -->
+    <div class="absolute inset-0 opacity-10">
+      <div
+        class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl"
+      ></div>
+      <div
+        class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl"
+      ></div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-md">
+      <!-- Card -->
+      <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12">
+        <!-- Logo -->
+        <div class="flex justify-center mb-8">
+          <div
+            class="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-2xl"
+          >
+            <span class="text-white font-bold text-3xl">AC</span>
+          </div>
+        </div>
+
+        <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">
+          ACity Connect
+        </h2>
+        <p class="text-center text-gray-600 mb-8">Smart Campus Marketplace</p>
+
+        <!-- Toggle between login and register -->
+        <div class="flex gap-2 mb-8 bg-gray-100 p-1 rounded-lg">
+          <button
+            onclick="showLogin()"
+            id="loginBtn"
+            class="flex-1 py-2 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-md font-bold transition duration-300"
+          >
+            Login
+          </button>
+          <button
+            onclick="showRegister()"
+            id="registerBtn"
+            class="flex-1 py-2 px-4 text-gray-700 rounded-md font-bold hover:bg-gray-200 transition duration-300"
+          >
+            Register
+          </button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-gray-700 font-bold mb-2"
+              >Email Address</label
+            >
+            <input
+              type="email"
+              id="loginEmail"
+              class="form-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Password</label>
+            <input
+              type="password"
+              id="loginPassword"
+              class="form-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition duration-300"
+          >
+            Sign In
+          </button>
+          <p id="loginMsg" class="text-center text-sm h-6"></p>
+        </form>
+
+        <!-- Register Form (hidden by default) -->
+        <form id="registerForm" class="space-y-4 hidden">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-gray-700 font-bold mb-2 text-sm"
+                >First Name</label
+              >
+              <input
+                type="text"
+                id="firstName"
+                class="form-input w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                placeholder="John"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-bold mb-2 text-sm"
+                >Last Name</label
+              >
+              <input
+                type="text"
+                id="lastName"
+                class="form-input w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                placeholder="Doe"
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-bold mb-2"
+              >Email Address</label
+            >
+            <input
+              type="email"
+              id="registerEmail"
+              class="form-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700 font-bold mb-2"
+              >Academic Email *</label
+            >
+            <input
+              type="email"
+              id="academicEmail"
+              class="form-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              placeholder="you@acity.edu"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Password</label>
+            <input
+              type="password"
+              id="registerPassword"
+              class="form-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition duration-300"
+          >
+            Create Account
+          </button>
+          <p class="text-center text-xs text-gray-500">
+            * Required for verification
+          </p>
+          <p id="registerMsg" class="text-center text-sm h-6"></p>
+        </form>
+
+        <!-- Back to home link -->
+        <div class="text-center mt-6">
+          <a
+            href="index.html"
+            class="text-gray-600 hover:text-blue-600 transition"
+            ><i class="fas fa-arrow-left"></i> Back to Home</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+  </body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Item - ACity Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        .navbar-shadow {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="navbar-shadow bg-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                    <span class="text-white font-bold">AC</span>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ACity Connect</h1>
+            </div>
+            <button class="mobile-menu-btn md:hidden" aria-label="Toggle navigation" aria-expanded="false"><i class="fas fa-bars"></i></button>
+            <div class="nav-links hidden md:flex items-center gap-4">
+                <a href="marketplace.html" class="nav-link"><i class="fas fa-arrow-left"></i> Back to Marketplace</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Form Container -->
+    <div class="max-w-3xl mx-auto px-4 py-12">
+        <div class="mb-8">
+            <h1 class="text-5xl font-bold text-gray-800 mb-2">Post a New Item</h1>
+            <p class="text-gray-600">Share your item with the community</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+            <form id="itemForm" class="space-y-8">
+                <!-- Title -->
+                <div>
+                    <label class="block text-gray-700 font-bold mb-3 text-lg">Item Title *</label>
+                    <input type="text" id="title" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition" placeholder="e.g., Introduction to Biology Textbook" required>
+                    <p class="text-gray-500 text-sm mt-1">Be descriptive and specific</p>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label class="block text-gray-700 font-bold mb-3 text-lg">Description *</label>
+                    <textarea id="description" rows="5" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition" placeholder="Describe your item in detail. Include condition, features, any defects..." required></textarea>
+                    <p class="text-gray-500 text-sm mt-1">More details help buyers decide faster</p>
+                </div>
+
+                <!-- Category and Price -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-3 text-lg">Category *</label>
+                        <select id="category" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition" required>
+                            <option value="">Select Category</option>
+                            <option value="textbooks"><i class="fas fa-book"></i> Textbooks</option>
+                            <option value="electronics"><i class="fas fa-laptop"></i> Electronics</option>
+                            <option value="furniture"><i class="fas fa-chair"></i> Furniture</option>
+                            <option value="other"><i class="fas fa-box"></i> Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-3 text-lg">Price (Optional)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3 text-gray-500 text-xl">$</span>
+                            <input type="number" id="price" class="w-full px-4 py-3 pl-8 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition" placeholder="0.00" min="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image URL -->
+                <div>
+                    <label class="block text-gray-700 font-bold mb-3 text-lg">Image URL (Optional)</label>
+                    <input type="url" id="imageUrl" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition" placeholder="https://example.com/image.jpg">
+                    <p class="text-gray-500 text-sm mt-1">Upload to an image service and paste the URL</p>
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label class="block text-gray-700 font-bold mb-3 text-lg">Status</label>
+                    <select id="status" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
+                        <option value="available"><i class="fas fa-check-circle"></i> Available</option>
+                        <option value="swapped"><i class="fas fa-sync"></i> Swapped</option>
+                        <option value="sold"><i class="fas fa-check"></i> Sold</option>
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition">
+                        <i class="fas fa-upload"></i> Post Item
+                    </button>
+                    <a href="marketplace.html" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-400 transition text-center">
+                        Cancel
+                    </a>
+                </div>
+
+                <p id="formMsg" class="text-center text-sm h-6"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/create-item.js"></script>
+    <footer class="footer">
+    <script src="js/ui.js"></script>
+        <div class="app-container">
+            <p>© 2026 ACity Connect — Smart Campus Marketplace</p>
+            <p style="margin-top:.4rem;"><a href="#" class="nav-link">Terms</a> • <a href="#" class="nav-link">Privacy</a></p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - ACity Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        .navbar-shadow {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+        .tab-button.active {
+            @apply border-b-2 border-blue-600 text-blue-600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="navbar-shadow bg-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                    <span class="text-white font-bold">AC</span>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ACity Connect</h1>
+            </div>
+            <button class="mobile-menu-btn md:hidden" aria-label="Toggle navigation" aria-expanded="false"><i class="fas fa-bars"></i></button>
+            <div class="nav-links hidden md:flex gap-4">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <button id="logoutBtn" onclick="logout()" class="btn btn-ghost"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <div class="max-w-7xl mx-auto px-4 py-12">
+        <!-- Profile Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Avatar and Info -->
+                <div class="col-span-1 text-center">
+                    <img id="avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=default" alt="Avatar" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-blue-600">
+                    <h2 id="profileName" class="text-2xl font-bold text-gray-800">Loading...</h2>
+                    <p id="profileEmail" class="text-gray-600 text-sm">Loading...</p>
+                    <button onclick="editProfile()" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-bold hover:shadow-lg transition mt-4">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+
+                <!-- Stats and About -->
+                <div class="col-span-1 md:col-span-3">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+                            <p class="text-2xl font-bold text-blue-600">0</p>
+                            <p class="text-gray-600 text-sm"><i class="fas fa-box"></i> Items Listed</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg">
+                            <p class="text-2xl font-bold text-green-600">0</p>
+                            <p class="text-gray-600 text-sm"><i class="fas fa-star"></i> Skills Shared</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg">
+                            <p class="text-2xl font-bold text-purple-600">0</p>
+                            <p class="text-gray-600 text-sm"><i class="fas fa-envelope"></i> Messages</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="font-bold text-gray-700">Phone</label>
+                            <p id="phone" class="text-gray-600">-</p>
+                        </div>
+                        <div>
+                            <label class="font-bold text-gray-700">Bio</label>
+                            <p id="bio" class="text-gray-600">-</p>
+                        </div>
+                        <div>
+                            <label class="font-bold text-gray-700">Member Since</label>
+                            <p id="joined" class="text-gray-600">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="flex gap-0 border-b border-gray-200">
+                <button onclick="showProfileTab('items')" class="tab-button active flex-1 py-4 px-6 font-bold text-gray-700 border-b-2 border-blue-600 text-blue-600 transition hover:bg-gray-50">
+                    <i class="fas fa-box"></i> My Items
+                </button>
+                <button onclick="showProfileTab('skills')" class="tab-button flex-1 py-4 px-6 font-bold text-gray-700 transition hover:bg-gray-50">
+                    <i class="fas fa-star"></i> My Skills
+                </button>
+                <button onclick="showProfileTab('messages')" class="tab-button flex-1 py-4 px-6 font-bold text-gray-700 transition hover:bg-gray-50">
+                    <i class="fas fa-envelope"></i> Messages
+                </button>
+            </div>
+
+            <!-- Items Tab -->
+            <div id="items-tab" class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Your Items</h3>
+                    <a href="create-item.html" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:shadow-lg transition text-sm">
+                        <i class="fas fa-plus"></i> Post Item
+                    </a>
+                </div>
+                <div id="itemsList" class="space-y-4">
+                    <div class="text-center py-12 text-gray-500">You haven't posted any items yet</div>
+                </div>
+            </div>
+
+            <!-- Skills Tab -->
+            <div id="skills-tab" class="p-8 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Your Skills</h3>
+                    <a href="create-skill.html" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:shadow-lg transition text-sm">
+                        <i class="fas fa-plus"></i> Share Skill
+                    </a>
+                </div>
+                <div id="skillsList" class="space-y-4">
+                    <div class="text-center py-12 text-gray-500">You haven't posted any skills yet</div>
+                </div>
+            </div>
+
+            <!-- Messages Tab -->
+            <div id="messages-tab" class="p-8 hidden">
+                <h3 class="text-xl font-bold mb-6">Your Messages</h3>
+                <div id="messagesList" class="space-y-4">
+                    <div class="text-center py-12 text-gray-500">No messages yet</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        const userId = getCurrentUserId();
+
+        if (!userId) {
+            window.location.href = 'auth.html';
+        }
+
+        async function loadProfile() {
+            try {
+                const userProfile = await apiCall(`/users/profile/${userId}`);
+                document.getElementById('profileName').textContent = `${userProfile.first_name} ${userProfile.last_name}`;
+                document.getElementById('profileEmail').textContent = userProfile.email;
+                document.getElementById('phone').textContent = userProfile.phone || '-';
+                document.getElementById('bio').textContent = userProfile.bio || '-';
+                document.getElementById('joined').textContent = new Date(userProfile.created_at).toLocaleDateString();
+                
+                if (userProfile.avatar_url) {
+                    document.getElementById('avatar').src = userProfile.avatar_url;
+                }
+            } catch (error) {
+                console.error('Failed to load profile:', error);
+            }
+        }
+
+        async function loadUserItems() {
+            try {
+                const items = await apiCall(`/items/user/${userId}`);
+                const container = document.getElementById('itemsList');
+
+                if (items.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-500 py-8">You haven\'t posted any items yet</div>';
+                    return;
+                }
+
+                container.innerHTML = items.map(item => `
+                    <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center border border-gray-200">
+                        <div>
+                            <h4 class="font-bold text-gray-800">${item.title}</h4>
+                            <p class="text-sm text-gray-600"><i class="fas fa-tag"></i> ${item.category} • <i class="fas fa-dollar-sign"></i>${item.price || 'Free'}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editItem(${item.id})" class="bg-blue-600 text-white px-3 py-1 rounded text-sm font-bold hover:bg-blue-700 transition"><i class="fas fa-edit"></i> Edit</button>
+                            <button onclick="deleteItem(${item.id})" class="bg-red-600 text-white px-3 py-1 rounded text-sm font-bold hover:bg-red-700 transition"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load items:', error);
+            }
+        }
+
+        async function loadUserSkills() {
+            try {
+                const skills = await apiCall(`/users/${userId}/skills`);
+                const container = document.getElementById('skillsList');
+
+                if (skills.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-500 py-8">You haven\'t added any skills yet</div>';
+                    return;
+                }
+
+                container.innerHTML = skills.map(skill => `
+                    <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center border border-gray-200">
+                        <div>
+                            <h4 class="font-bold text-gray-800">${skill.skill_name}</h4>
+                            <p class="text-sm text-gray-600">${skill.proficiency_level || 'Not specified'}</p>
+                        </div>
+                        <button onclick="deleteSkill(${skill.id})" class="bg-red-600 text-white px-3 py-1 rounded text-sm font-bold hover:bg-red-700 transition"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load skills:', error);
+            }
+        }
+
+        async function loadMessages() {
+            try {
+                const messages = await apiCall(`/interactions/messages/${userId}`);
+                const container = document.getElementById('messagesList');
+
+                if (messages.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-500 py-8">No messages yet</div>';
+                    return;
+                }
+
+                container.innerHTML = messages.map(msg => `
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="flex justify-between items-start mb-2">
+                            <strong class="text-gray-800">${msg.first_name} ${msg.last_name}</strong>
+                            <span class="text-xs text-gray-500">${new Date(msg.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <p class="text-gray-700">${msg.message_text}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load messages:', error);
+            }
+        }
+
+        function showProfileTab(tab) {
+            document.getElementById('items-tab').classList.add('hidden');
+            document.getElementById('skills-tab').classList.add('hidden');
+            document.getElementById('messages-tab').classList.add('hidden');
+
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active', 'border-b-2', 'border-blue-600', 'text-blue-600'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.add('text-gray-700'));
+
+            if (tab === 'items') {
+                document.getElementById('items-tab').classList.remove('hidden');
+                event.target.classList.add('active', 'border-b-2', 'border-blue-600', 'text-blue-600');
+                loadUserItems();
+            } else if (tab === 'skills') {
+                document.getElementById('skills-tab').classList.remove('hidden');
+                event.target.classList.add('active', 'border-b-2', 'border-blue-600', 'text-blue-600');
+                loadUserSkills();
+            } else if (tab === 'messages') {
+                document.getElementById('messages-tab').classList.remove('hidden');
+                event.target.classList.add('active', 'border-b-2', 'border-blue-600', 'text-blue-600');
+                loadMessages();
+            }
+        }
+
+        function editProfile() {
+            const newBio = prompt('Enter your bio:');
+            if (newBio !== null) {
+                apiCall(`/users/profile/${userId}`, 'PUT', { bio: newBio })
+                    .then(() => loadProfile())
+                    .catch(error => alert('Failed to update profile: ' + error.message));
+            }
+        }
+
+        function deleteItem(itemId) {
+            if (confirm('Delete this item?')) {
+                apiCall(`/items/${itemId}`, 'DELETE')
+                    .then(() => loadUserItems())
+                    .catch(error => alert('Failed to delete'));
+            }
+        }
+
+        function deleteSkill(skillId) {
+            if (confirm('Delete this skill?')) {
+                apiCall(`/users/skills/${skillId}`, 'DELETE')
+                    .then(() => loadUserSkills())
+                    .catch(error => alert('Failed to delete'));
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+    <script src="js/ui.js"></script>
+    <footer class="footer">
+        <div class="app-container">
+            <p>© 2026 ACity Connect — Smart Campus Marketplace</p>
+            <p style="margin-top:.4rem;"><a href="#" class="nav-link">Terms</a> • <a href="#" class="nav-link">Privacy</a></p>
+        </div>
+    </footer>
+</body>
+</html>
