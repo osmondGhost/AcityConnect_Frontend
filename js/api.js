@@ -44,6 +44,15 @@ if (typeof window !== 'undefined') {
   window.getAcityConnectApiBaseUrl = resolveApiBaseUrl;
 }
 
+function decodeJwtPayload(token) {
+  try {
+    const payloadPart = token.split('.')[1];
+    return JSON.parse(atob(payloadPart));
+  } catch {
+    return null;
+  }
+}
+
 // Utility function to get token from localStorage
 function getToken() {
   return localStorage.getItem('token');
@@ -98,9 +107,63 @@ function getCurrentUserId() {
   const token = getToken();
   if (!token) return null;
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const payload = decodeJwtPayload(token);
     return payload.id;
   } catch {
     return null;
   }
+}
+
+function getCurrentUserEmail() {
+  const token = getToken();
+  if (!token) return null;
+
+  const payload = decodeJwtPayload(token);
+  return payload?.email || null;
+}
+
+function resolveAdminEmailList() {
+  const configuredEmails = [];
+
+  if (typeof window !== 'undefined') {
+    if (window.__ACITY_ADMIN_EMAILS__) {
+      configuredEmails.push(window.__ACITY_ADMIN_EMAILS__);
+    }
+    const savedAdminEmails = localStorage.getItem('acityConnectAdminEmails');
+    if (savedAdminEmails) {
+      configuredEmails.push(savedAdminEmails);
+    }
+  }
+
+  return new Set(
+    configuredEmails
+      .join(',')
+      .split(',')
+      .map((value) => value.trim().toLowerCase())
+      .filter(Boolean)
+  );
+}
+
+function isCurrentUserAdmin() {
+  const email = getCurrentUserEmail();
+  if (!email) return false;
+
+  const adminEmails = resolveAdminEmailList();
+  if (adminEmails.size === 0) return false;
+
+  return adminEmails.has(email.toLowerCase());
+}
+
+function requireAdmin() {
+  if (!isLoggedIn()) {
+    window.location.href = 'auth.html';
+    return false;
+  }
+
+  if (!isCurrentUserAdmin()) {
+    window.location.href = 'index.html?admin=denied';
+    return false;
+  }
+
+  return true;
 }

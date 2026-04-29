@@ -1,4 +1,8 @@
-requireLogin();
+const hasAdminAccess = typeof requireAdmin === 'function' ? requireAdmin() : false;
+
+if (!hasAdminAccess) {
+  console.warn('Admin access denied');
+}
 
 const METRIC_STYLES = {
   blue: 'bg-blue-100 text-blue-600',
@@ -211,4 +215,8 @@ async function removeReport(reportId) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', loadDashboard);
+document.addEventListener('DOMContentLoaded', () => {
+  if (hasAdminAccess) {
+    loadDashboard();
+  }
+});
