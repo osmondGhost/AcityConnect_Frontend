@@ -177,7 +177,7 @@
         }
 
         function viewItem(id) {
-            alert('Item ' + id + ' - Detail page coming soon!');
+            window.location.href = `marketplace-item.html?id=${id}`;
         }
 
         document.addEventListener('DOMContentLoaded', loadItems);

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details - ACity Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <nav class="bg-white sticky top-0 z-50 shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                    <span class="text-white font-bold">AC</span>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ACity Connect</h1>
+            </div>
+            <div class="hidden md:flex gap-6 items-center">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="skills.html" class="nav-link">Skills</a>
+                <a href="profile.html" class="btn btn-primary">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-gradient text-white py-14">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-sm uppercase tracking-[0.3em] text-white/80 mb-3">Marketplace item</p>
+            <h2 class="text-4xl md:text-5xl font-bold mb-3">Item Details</h2>
+            <p class="text-white/90 max-w-2xl">Review the item, seller information, and current status before you contact the owner.</p>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-4 py-10">
+        <a href="marketplace.html" class="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 mb-6">
+            <i class="fas fa-arrow-left"></i> Back to marketplace
+        </a>
+
+        <div id="itemDetailCard" class="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+            <div class="p-10 text-center text-gray-500">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                <p class="mt-4">Loading item details...</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-300 py-10 mt-14">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm">
+            <p>&copy; 2024 ACity Connect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script>
+        function getItemIdFromUrl() {
+            return new URLSearchParams(window.location.search).get('id');
+        }
+
+        function formatPrice(price) {
+            if (price === null || price === undefined || price === '') {
+                return 'Free';
+            }
+
+            const numericPrice = Number(price);
+            return Number.isNaN(numericPrice) ? 'Free' : `$${numericPrice.toFixed(2)}`;
+        }
+
+        function statusBadge(status) {
+            const base = 'inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold';
+            if (status === 'available') return `${base} bg-green-100 text-green-800`;
+            if (status === 'swapped') return `${base} bg-yellow-100 text-yellow-800`;
+            if (status === 'sold') return `${base} bg-gray-100 text-gray-800`;
+            return `${base} bg-blue-100 text-blue-800`;
+        }
+
+        function renderItem(item) {
+            const sellerName = [item.seller_first_name, item.seller_last_name].filter(Boolean).join(' ') || 'Unknown seller';
+            const imageMarkup = item.image_url
+                ? `<img src="${item.image_url}" alt="${item.title}" class="w-full h-full object-cover">`
+                : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 text-blue-400"><i class="fas fa-box text-6xl"></i></div>`;
+
+            document.getElementById('itemDetailCard').innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                    <div class="min-h-[420px] bg-gray-100">
+                        ${imageMarkup}
+                    </div>
+                    <div class="p-8 md:p-10 flex flex-col gap-6">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="${statusBadge(item.status)}">${item.status || 'available'}</span>
+                            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">${item.category}</span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">${item.title}</h3>
+                            <p class="text-3xl font-extrabold text-blue-600">${formatPrice(item.price)}</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-lg font-bold mb-2">Description</h4>
+                            <p class="text-gray-600 leading-7 whitespace-pre-line">${item.description}</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="rounded-2xl border border-gray-200 p-4 bg-gray-50">
+                                <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Seller</p>
+                                <p class="font-semibold text-gray-900">${sellerName}</p>
+                                <p class="text-sm text-gray-600">${item.seller_email || 'No email provided'}</p>
+                            </div>
+                            <div class="rounded-2xl border border-gray-200 p-4 bg-gray-50">
+                                <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Academic Email</p>
+                                <p class="font-semibold text-gray-900">${item.seller_academic_email || 'Not provided'}</p>
+                            </div>
+                        </div>
+
+                        <div class="rounded-2xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-900">
+                            Contact the seller from their profile or use the message tools after login.
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <a href="marketplace.html" class="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl border border-gray-300 bg-white font-semibold hover:bg-gray-50 transition">Back to listings</a>
+                            <a href="profile.html" class="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:shadow-lg transition">Open profile tools</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadItem() {
+            const itemId = getItemIdFromUrl();
+            const container = document.getElementById('itemDetailCard');
+
+            if (!itemId) {
+                container.innerHTML = '<div class="p-10 text-center text-red-600 font-semibold">No item ID was provided.</div>';
+                return;
+            }
+
+            try {
+                const item = await apiCall(`/items/${itemId}`);
+                renderItem(item);
+            } catch (error) {
+                container.innerHTML = `<div class="p-10 text-center text-red-600 font-semibold">Failed to load item details: ${error.message}</div>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadItem);
+    </script>
+</body>
+</html>

@@ -55,8 +55,7 @@ function filterItems() {
 }
 
 function viewItem(id) {
-  // Navigate to item detail page (we can create this later)
-  alert('Item ' + id + ' - Detail page coming soon!');
+  window.location.href = `marketplace-item.html?id=${id}`;
 }
 
 // Load items on page load
