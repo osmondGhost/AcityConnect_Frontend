@@ -147,6 +147,14 @@ function resolveAdminEmailList() {
 }
 
 function isCurrentUserAdmin() {
+  const token = getToken();
+  if (token) {
+    const payload = decodeJwtPayload(token);
+    if (payload?.admin === true) {
+      return true;
+    }
+  }
+
   const email = getCurrentUserEmail();
   if (!email) return false;
 
