@@ -23,40 +23,7 @@ function resolveApiBaseUrl() {
     return DEFAULT_API_BASE_URL;
   }
 
-  const savedBaseUrl = localStorage.getItem('acityConnectApiBaseUrl');
-  if (savedBaseUrl) {
-    return normalizeApiBaseUrl(savedBaseUrl);
-  }
-
   return PRODUCTION_API_BASE_URL;
-}
-
-function getApiBaseUrlCandidates() {
-  if (typeof window === 'undefined') {
-    return [DEFAULT_API_BASE_URL];
-  }
-
-  const candidates = [];
-
-  const addCandidate = (url) => {
-    if (!url) return;
-    const normalizedUrl = normalizeApiBaseUrl(url);
-    if (!candidates.includes(normalizedUrl)) {
-      candidates.push(normalizedUrl);
-    }
-  };
-
-  addCandidate(window.__ACITY_API_BASE_URL__);
-  addCandidate(localStorage.getItem('acityConnectApiBaseUrl'));
-  addCandidate(resolveApiBaseUrl());
-
-  if (window.location.origin && window.location.origin !== 'null') {
-    addCandidate(`${window.location.origin}/api`);
-  }
-
-  addCandidate(DEFAULT_API_BASE_URL);
-
-  return candidates;
 }
 
 const API_BASE_URL = resolveApiBaseUrl();
@@ -110,25 +77,19 @@ async function apiCall(endpoint, method = 'GET', body = null) {
     options.body = JSON.stringify(body);
   }
 
-  let lastError = null;
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+    const data = await response.json();
 
-  for (const baseUrl of getApiBaseUrlCandidates()) {
-    try {
-      const response = await fetch(`${baseUrl}${endpoint}`, options);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'API Error');
-      }
-
-      return data;
-    } catch (error) {
-      lastError = error;
+    if (!response.ok) {
+      throw new Error(data.error || 'API Error');
     }
-  }
 
-  console.error('API Error:', lastError);
-  throw lastError;
+    return data;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
+  }
 }
 
 // Check if user is logged in
