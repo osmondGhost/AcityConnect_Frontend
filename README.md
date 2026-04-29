@@ -1,80 +1,71 @@
 # ACity Connect Frontend
 
-HTML + Tailwind CSS frontend for the ACity Connect Smart Campus Marketplace.
+A City Connect frontend for the Smart Campus Marketplace. This project provides the user interface for browsing items, posting listings, exchanging skills, and managing profiles using plain HTML, Tailwind CSS, and Vanilla JavaScript.
+
+## Overview
+
+This frontend is designed as a student-focused marketplace for campus life. It includes:
+
+- User authentication (login/register)
+- Item marketplace browsing and posting
+- Skill exchange posting and discovery
+- User profile management
+- Responsive UI for desktop and mobile
+
+The frontend connects to a backend API for authentication, item management, and user profile data.
 
 ## Project Structure
 
 ```
 frontend/
 ├── index.html           # Home page
-├── auth.html           # Login & Register page
-├── marketplace.html    # Items marketplace
-├── create-item.html    # Post new item form
-├── skills.html         # Skill exchange page
-├── create-skill.html   # Post skill exchange form
-├── profile.html        # User profile page
-├── js/
-│   ├── api.js         # API utilities
-│   ├── auth.js        # Authentication logic
-│   ├── marketplace.js # Marketplace logic
-│   ├── create-item.js # Item creation logic
-│   ├── skills.js      # Skills logic
-│   ├── create-skill.js # Skill creation logic
-│   ├── profile.js     # Profile logic
-│   └── main.js        # General utilities
-└── Overview.jpg / Tech stack.jpg  # Assignment docs
+├── auth.html            # Login & registration page
+├── marketplace.html     # Marketplace listings and filters
+├── create-item.html     # Add a new marketplace item
+├── skills.html          # Skill exchange page
+├── create-skill.html    # Add a new skill listing
+├── profile.html         # User profile and activity
+├── js/                  # Frontend JavaScript logic
+│   ├── api.js
+│   ├── auth.js
+│   ├── marketplace.js
+│   ├── create-item.js
+│   ├── skills.js
+│   ├── create-skill.js
+│   ├── profile.js
+│   └── main.js
+├── css/                 # Custom styles
+├── README.md
+├── package-lock.json    # Node dependency lockfile for local tooling
+├── Overview.jpg         # Project design or assignment diagram
+└── Tech stack.jpg       # Technology overview image
 ```
 
 ## Features
 
-### Pages
-- **Home** - Landing page with feature overview
-- **Auth** - Login & registration with academic email verification
-- **Marketplace** - Browse, filter, and search items
-- **Post Item** - Create new marketplace listings
-- **Skills** - View and exchange skills
-- **Profile** - Manage profile, items, skills, and messages
-
-### Key Functionality
-✅ User authentication (Login/Register)
-✅ Browse marketplace items with filters
-✅ Post items for sale
-✅ Skill exchange system
-✅ User profiles with activity tracking
-✅ Message system (ready for API integration)
-✅ Responsive design with Tailwind CSS
+- **Authentication**: Login and registration with academic email support
+- **Marketplace**: Browse available items, search, and filter results
+- **Post Items**: Add new item listings with details
+- **Skills Exchange**: Share and request skills among campus users
+- **Profile**: View and manage user profile and posted content
+- **Responsive Layout**: Works across modern desktop and mobile browsers
 
 ## Setup
 
-### No Build Required!
-This is a plain HTML + JavaScript frontend with Tailwind CDN.
+This frontend is a static HTML/JS project and does not require a build step.
 
-1. **Open in Browser** - Simply open `index.html` in your browser
-2. **Or use Live Server** - Install "Live Server" VS Code extension:
-   - Right-click `index.html` → "Open with Live Server"
-   - This avoids CORS issues during development
+### Option 1: Open directly
 
-### API Configuration
-The frontend will use `http://localhost:5000/api` on local machines.
+1. Open `index.html` in your browser.
 
-To point it at Render, set the base URL once in the browser console or through your page bootstrap code:
-```javascript
-window.setAcityConnectApiBaseUrl('https://your-render-service.onrender.com/api');
-```
+### Option 2: Use Live Server
 
-You can also define `window.__ACITY_API_BASE_URL__` before loading `js/api.js` if you want the value baked into the page.
+1. Install the VS Code extension `Live Server`
+2. Right-click `index.html` → `Open with Live Server`
 
-## Running Locally
+### Option 3: Use a local HTTP server
 
-### Option 1: Live Server (Recommended)
-```bash
-# Install VS Code extension "Live Server"
-# Right-click index.html → Open with Live Server
-# Runs on http://127.0.0.1:5500
-```
-
-### Option 2: Simple HTTP Server
-```bash
+```powershell
 # Python 3
 python -m http.server 8000
 
@@ -82,50 +73,43 @@ python -m http.server 8000
 npx http-server
 ```
 
-Then open `http://localhost:8000` in browser.
+Then open `http://localhost:8000`.
 
-## Integration with Backend
+## API Configuration
 
-The frontend communicates with the backend API through `js/api.js`, which defaults to `http://localhost:5000/api` locally and can be switched to your Render URL.
+The frontend expects the backend API at:
 
-**Required Backend Endpoints:**
-- `POST /api/users/login`
-- `POST /api/users/register`
-- `GET /api/items`
-- `POST /api/items`
-- `GET /api/users/profile/:id`
-- `GET /api/users/:id/skills`
-- And others (see backend README)
+```text
+http://localhost:5000/api
+```
 
-### To test locally:
+If you need to use a deployed backend, update the base URL in `js/api.js` or set it globally before page load.
 
-1. Start backend: `cd backend && npm run dev`
-2. Start frontend: `Live Server` or `http-server`
-3. Open `http://localhost:8000` (or 5500)
-4. Try: Register → Post Item → Browse Marketplace
+## Running Locally
+
+1. Start the backend application
+2. Launch the frontend with Live Server or a local web server
+3. Open the app in your browser
+4. Register, login, and interact with marketplace and skills
 
 ## Technology Stack
 
-- **HTML5** - Semantic markup
-- **Tailwind CSS** - Utility-first CSS (via CDN)
-- **Vanilla JavaScript** - No framework, lightweight
-- **Fetch API** - AJAX requests
-
-## Browser Support
-
-Works in all modern browsers (Chrome, Firefox, Safari, Edge).
-
-## Next Steps
-
-- Add real-time messaging (Socket.io)
-- Item detail pages with reviews
-- Admin dashboard
-- Deploy frontend to GitHub Pages
-- Deploy backend to Render
+- HTML5
+- Tailwind CSS
+- Vanilla JavaScript
+- Fetch API
 
 ## Notes
 
-- Tokens stored in `localStorage` after login
-- All API calls include JWT authentication header
-- Responsive design - works on mobile & desktop
-- Simple error handling with user feedback
+- User tokens are stored in `localStorage`
+- The frontend uses `js/api.js` to call backend routes
+- The project is built for modern browsers
+- No frontend framework is required
+
+## Next Improvements
+
+- Add item detail pages
+- Implement real-time messaging
+- Add admin dashboard tools
+- Deploy frontend to GitHub Pages
+- Improve error handling and form validation
