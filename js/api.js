@@ -15,13 +15,17 @@ function resolveApiBaseUrl() {
     return normalizeApiBaseUrl(window.__ACITY_API_BASE_URL__);
   }
 
+  if (
+    window.location.protocol === 'file:' ||
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+  ) {
+    return DEFAULT_API_BASE_URL;
+  }
+
   const savedBaseUrl = localStorage.getItem('acityConnectApiBaseUrl');
   if (savedBaseUrl) {
     return normalizeApiBaseUrl(savedBaseUrl);
-  }
-
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return DEFAULT_API_BASE_URL;
   }
 
   return PRODUCTION_API_BASE_URL;

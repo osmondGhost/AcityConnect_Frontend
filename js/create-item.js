@@ -8,6 +8,7 @@ document.getElementById('itemForm').addEventListener('submit', async (e) => {
   const title = document.getElementById('title').value;
   const description = document.getElementById('description').value;
   const category = document.getElementById('category').value;
+  const status = document.getElementById('status').value;
   const price = document.getElementById('price').value || null;
   const image_url = document.getElementById('imageUrl').value || null;
 
@@ -16,6 +17,7 @@ document.getElementById('itemForm').addEventListener('submit', async (e) => {
       title,
       description,
       category,
+      status,
       price: price ? parseFloat(price) : null,
       image_url
     });
