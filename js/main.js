@@ -34,6 +34,12 @@ async function loadHomepageStats() {
 
 document.addEventListener('DOMContentLoaded', () => {
 	const adminLink = document.getElementById('adminDashboardLink');
+	const loginLink = document.getElementById('loginNavLink');
+
+	if (loginLink && typeof isLoggedIn === 'function' && isLoggedIn()) {
+		loginLink.hidden = true;
+	}
+
 	if (!adminLink || typeof isCurrentUserAdmin !== 'function') {
 		loadHomepageStats();
 		return;

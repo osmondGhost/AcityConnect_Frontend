@@ -31,6 +31,34 @@ function resolveApiBaseUrl() {
   return PRODUCTION_API_BASE_URL;
 }
 
+function getApiBaseUrlCandidates() {
+  if (typeof window === 'undefined') {
+    return [DEFAULT_API_BASE_URL];
+  }
+
+  const candidates = [];
+
+  const addCandidate = (url) => {
+    if (!url) return;
+    const normalizedUrl = normalizeApiBaseUrl(url);
+    if (!candidates.includes(normalizedUrl)) {
+      candidates.push(normalizedUrl);
+    }
+  };
+
+  addCandidate(window.__ACITY_API_BASE_URL__);
+  addCandidate(localStorage.getItem('acityConnectApiBaseUrl'));
+  addCandidate(resolveApiBaseUrl());
+
+  if (window.location.origin && window.location.origin !== 'null') {
+    addCandidate(`${window.location.origin}/api`);
+  }
+
+  addCandidate(DEFAULT_API_BASE_URL);
+
+  return candidates;
+}
+
 const API_BASE_URL = resolveApiBaseUrl();
 
 function setApiBaseUrl(url) {
@@ -42,6 +70,13 @@ function setApiBaseUrl(url) {
 if (typeof window !== 'undefined') {
   window.setAcityConnectApiBaseUrl = setApiBaseUrl;
   window.getAcityConnectApiBaseUrl = resolveApiBaseUrl;
+  window.apiCall = apiCall;
+  window.isLoggedIn = isLoggedIn;
+  window.requireLogin = requireLogin;
+  window.getCurrentUserId = getCurrentUserId;
+  window.getCurrentUserEmail = getCurrentUserEmail;
+  window.isCurrentUserAdmin = isCurrentUserAdmin;
+  window.requireAdmin = requireAdmin;
 }
 
 function decodeJwtPayload(token) {
@@ -75,19 +110,25 @@ async function apiCall(endpoint, method = 'GET', body = null) {
     options.body = JSON.stringify(body);
   }
 
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-    const data = await response.json();
+  let lastError = null;
 
-    if (!response.ok) {
-      throw new Error(data.error || 'API Error');
+  for (const baseUrl of getApiBaseUrlCandidates()) {
+    try {
+      const response = await fetch(`${baseUrl}${endpoint}`, options);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'API Error');
+      }
+
+      return data;
+    } catch (error) {
+      lastError = error;
     }
-
-    return data;
-  } catch (error) {
-    console.error('API Error:', error);
-    throw error;
   }
+
+  console.error('API Error:', lastError);
+  throw lastError;
 }
 
 // Check if user is logged in
